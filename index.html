@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Chat With Medox - Your AI Friend, Teacher & Assistant. Ask anything in English, Hindi or Hinglish!">
+    <title>Chat With Medox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i>
+                <span>New Chat</span>
+            </button>
+        </div>
+
+        <div class="mode-section">
+            <label class="section-label">Mode</label>
+            <div class="mode-selector" id="modeSelector">
+                <button class="mode-btn active" data-mode="friend">
+                    <i class="fas fa-heart"></i> Friend
+                </button>
+                <button class="mode-btn" data-mode="teacher">
+                    <i class="fas fa-graduation-cap"></i> Teacher
+                </button>
+                <button class="mode-btn" data-mode="engine">
+                    <i class="fas fa-cogs"></i> Engine
+                </button>
+            </div>
+        </div>
+
+        <div class="language-section">
+            <label class="section-label">Language</label>
+            <div class="language-selector" id="languageSelector">
+                <button class="lang-btn active" data-lang="english">EN</button>
+                <button class="lang-btn" data-lang="hindi">हि</button>
+                <button class="lang-btn" data-lang="hinglish">Hi-En</button>
+            </div>
+        </div>
+
+        <div class="chat-history-section">
+            <label class="section-label">Chat History</label>
+            <div class="chat-history-list" id="chatHistoryList">
+                <!-- Chat history items will be added dynamically -->
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="settings-btn" id="settingsBtn">
+                <i class="fas fa-gear"></i>
+                <span>Settings</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Sidebar Toggle (for mobile) -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Chat Area -->
+    <main class="chat-main" id="chatMain">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="header-left">
+                <div class="bot-avatar-header">
+                    <div class="avatar-glow"></div>
+                    <i class="fas fa-robot"></i>
+                    <span class="online-dot"></span>
+                </div>
+                <div class="header-info">
+                    <h1 class="bot-name-display" id="botNameDisplay">Medox</h1>
+                    <span class="bot-status">Online • Ready to help</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="mode-badge" id="modeBadge">
+                    <i class="fas fa-heart"></i> Friend Mode
+                </span>
+                <span class="lang-badge" id="langBadge">EN</span>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Messages Container -->
+        <div class="messages-container" id="messagesContainer">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-avatar">
+                    <div class="welcome-glow-ring"></div>
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h2 class="welcome-title">Hey! I'm <span id="welcomeBotName">Medox</span> 👋</h2>
+                <p class="welcome-subtitle">Your AI friend, teacher & assistant. Ask me anything!</p>
+                <div class="quick-actions">
+                    <button class="quick-chip" data-query="What's the current time?">
+                        <i class="fas fa-clock"></i> What's the time?
+                    </button>
+                    <button class="quick-chip" data-query="Tell me today's top news">
+                        <i class="fas fa-newspaper"></i> Today's News
+                    </button>
+                    <button class="quick-chip" data-query="What's the weather like today?">
+                        <i class="fas fa-cloud-sun"></i> Weather Update
+                    </button>
+                    <button class="quick-chip" data-query="Suggest a good app for productivity">
+                        <i class="fas fa-mobile-alt"></i> Suggest an App
+                    </button>
+                    <button class="quick-chip" data-query="Latest sports updates">
+                        <i class="fas fa-futbol"></i> Sports Update
+                    </button>
+                    <button class="quick-chip" data-query="What's happening in politics today?">
+                        <i class="fas fa-landmark"></i> Politics Update
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages will be appended here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-container">
+                <div class="input-actions-left">
+                    <label for="fileUpload" class="input-icon-btn" title="Upload File">
+                        <i class="fas fa-paperclip"></i>
+                    </label>
+                    <input type="file" id="fileUpload" class="hidden-file-input" accept="image/*,.pdf,.doc,.docx,.txt">
+                    <label for="imageUpload" class="input-icon-btn" title="Upload Image">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="imageUpload" class="hidden-file-input" accept="image/*">
+                </div>
+                <div class="file-preview-area" id="filePreviewArea" style="display:none;">
+                    <div class="file-preview" id="filePreview">
+                        <span class="file-name" id="fileName"></span>
+                        <button class="remove-file-btn" id="removeFileBtn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <input type="text" class="message-input" id="messageInput" placeholder="Type your message..." autocomplete="off">
+                <div class="input-actions-right">
+                    <button class="input-icon-btn mic-btn" id="micBtn" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="send-btn" id="sendBtn" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="closeSettings"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label>Bot Personality</label>
+                    <textarea id="personalityInput" placeholder="Describe how you want the bot to behave...">You are a friendly, helpful AI assistant. You can be a friend, teacher, or technical engine based on the selected mode. Be warm, supportive, and knowledgeable.</textarea>
+                </div>
+                <div class="setting-group">
+                    <label>Response Style</label>
+                    <select id="responseStyle">
+                        <option value="casual">Casual & Friendly</option>
+                        <option value="formal">Formal & Professional</option>
+                        <option value="fun">Fun & Playful</option>
+                        <option value="detailed">Detailed & Technical</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>OpenRouter API Key (For real AI!)</label>
+                    <input type="password" id="openRouterKeyInput" placeholder="Paste your API Key here..." style="width: 100%; padding: var(--spacing-2) var(--spacing-3); background: var(--surface-container-high); border: 1px solid rgba(74, 69, 80, 0.2); border-radius: var(--radius-md); color: var(--on-surface); font-family: var(--font-body); font-size: 0.875rem; margin-bottom: 0.5rem; outline: none;">
+                    <button class="primary-btn" id="saveOpenRouterKey" style="padding: var(--spacing-2) var(--spacing-4); background: var(--gradient-primary); color: var(--on-primary); border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: var(--spacing-2); transition: all var(--transition-fast);">
+                        <i class="fas fa-save"></i> Save Key
+                    </button>
+                    <p style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 0.5rem;">Get a key at: <a href="https://openrouter.ai/keys" target="_blank" style="color: var(--secondary);">OpenRouter API</a></p>
+                </div>
+                <div class="setting-group">
+                    <label>Clear All Chats</label>
+                    <button class="danger-btn" id="clearAllChats">
+                        <i class="fas fa-trash"></i> Clear All History
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
